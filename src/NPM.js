@@ -24,10 +24,21 @@ class NPM {
         //Make sure parent dir is there
         mkdirp.sync(Path.dirname(this._target));
 
+        //Get rid of any npm environment variables - will confuse the process.
+        const filteredEnv = {};
+        Object.entries(process.env).forEach(([key,value]) => {
+            if (key.toLowerCase().startsWith('npm_')) {
+                return;
+            }
+
+            filteredEnv[key] = value;
+        });
+
         //Install using npm
         spawnSync(`npm i ${packageName} --prefix ${tmpFolder.replace(/@/g,'\\@')}`, {
             stdio: 'inherit',
-            shell: true
+            shell: true,
+            env: filteredEnv
         });
 
         //Move into place
