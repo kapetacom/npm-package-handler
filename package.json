@@ -1,0 +1,10 @@
+{
+    "name": "@blockware/npm-package-handler",
+    "version": "0.0.1",
+    "description": "Utility for installing, upgrading and removing npm packages outside of npm projects",
+    "main": "index.js",
+    "license": "MIT",
+    "dependencies": {
+        "rimraf": "2.6.3"
+    }
+}
