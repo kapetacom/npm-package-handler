@@ -3,6 +3,7 @@ const Path = require('path');
 const OS = require('os');
 const FS = require('fs');
 const rimraf = require("rimraf");
+const mkdirp = require("mkdirp");
 
 class NPM {
 
@@ -19,6 +20,9 @@ class NPM {
         if (FS.existsSync(tmpFolder)) {
             rimraf.sync(tmpFolder)
         }
+
+        //Make sure parent dir is there
+        mkdirp.sync(Path.dirname(this._target));
 
         //Install using npm
         spawnSync(`npm i ${packageName} --prefix ${tmpFolder.replace(/@/g,'\\@')}`, {
@@ -47,6 +51,9 @@ class NPM {
 
     link(folder) {
         this.remove();
+
+        //Make sure parent dir is there
+        mkdirp.sync(Path.dirname(this._target));
 
         const packageFile = Path.join(folder, 'package.json');
         if (!FS.existsSync(packageFile)) {

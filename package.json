@@ -9,6 +9,7 @@
         "access": "public"
     },
     "dependencies": {
+        "mkdirp": "0.5.1",
         "rimraf": "2.6.3"
     }
 }
