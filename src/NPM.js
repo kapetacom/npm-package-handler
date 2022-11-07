@@ -2,7 +2,7 @@ const {spawnSync} = require('child_process');
 const Path = require('path');
 const FS = require('fs');
 const FSExtra = require('fs-extra');
-
+const OS = require('os');
 class NPM {
 
     /**
@@ -14,7 +14,7 @@ class NPM {
     }
 
     install(packageName) {
-        const tmpFolder = "/home/smo/.blockware/tmp" + '/npm-installer/' + packageName;
+        const tmpFolder = OS.tmpdir() + '/npm-installer/' + packageName;
         if (FS.existsSync(tmpFolder)) {
             FSExtra.removeSync(tmpFolder);
         }
