@@ -1,9 +1,7 @@
 const {spawnSync} = require('child_process');
 const Path = require('path');
-const OS = require('os');
 const FS = require('fs');
-const rimraf = require("rimraf");
-const mkdirp = require("mkdirp");
+const FSExtra = require('fs-extra');
 
 class NPM {
 
@@ -16,13 +14,13 @@ class NPM {
     }
 
     install(packageName) {
-        const tmpFolder = OS.tmpdir() + '/npm-installer/' + packageName;
+        const tmpFolder = "/home/smo/.blockware/tmp" + '/npm-installer/' + packageName;
         if (FS.existsSync(tmpFolder)) {
-            rimraf.sync(tmpFolder)
+            FSExtra.removeSync(tmpFolder);
         }
 
         //Make sure parent dir is there
-        mkdirp.sync(Path.dirname(this._target));
+        FSExtra.mkdirpSync(Path.dirname(this._target));
 
         //Get rid of any npm environment variables - will confuse the process.
         const filteredEnv = {};
@@ -42,16 +40,16 @@ class NPM {
         });
 
         //Move into place
-        FS.renameSync(tmpFolder + '/node_modules/' + packageName, this._target);
-        FS.renameSync(tmpFolder + '/node_modules', this._target + '/node_modules');
-
+        FSExtra.moveSync(tmpFolder + '/node_modules/' + packageName, this._target);
+        FSExtra.moveSync(tmpFolder + '/node_modules', this._target + '/node_modules');
         //Clean up
-        rimraf.sync(tmpFolder);
+        FSExtra.removeSync(tmpFolder);
+
     }
 
     remove() {
         if (FS.existsSync(this._target)) {
-            rimraf.sync(this._target)
+            FSExtra.removeSync(tmpFolder);
         }
     }
 
@@ -64,8 +62,7 @@ class NPM {
         this.remove();
 
         //Make sure parent dir is there
-        mkdirp.sync(Path.dirname(this._target));
-
+        FSExtra.mkdirpSync(Path.dirname(this._target));
         const packageFile = Path.join(folder, 'package.json');
         if (!FS.existsSync(packageFile)) {
             throw new Error(`NPM module not found in folder: ${folder}`);
