@@ -9,7 +9,6 @@
         "access": "public"
     },
     "dependencies": {
-        "mkdirp": "0.5.1",
-        "rimraf": "2.6.3"
+        "fs-extra": "7.0.1"
     }
 }
