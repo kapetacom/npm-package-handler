@@ -49,7 +49,7 @@ class NPM {
 
     remove() {
         if (FS.existsSync(this._target)) {
-            FSExtra.removeSync(tmpFolder);
+            FSExtra.removeSync(this._target);
         }
     }
 
