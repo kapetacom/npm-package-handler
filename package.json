@@ -1,6 +1,6 @@
 {
     "name": "@kapeta/npm-package-handler",
-    "version": "0.0.14",
+    "version": "0.0.15",
     "description": "Utility for installing, upgrading and removing npm packages outside of npm projects",
     "main": "index.js",
     "license": "MIT",
