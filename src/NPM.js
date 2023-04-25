@@ -48,9 +48,14 @@ class NPM {
     }
 
     remove() {
-        if (FS.existsSync(this._target)) {
-            FSExtra.removeSync(this._target);
-        }
+        try {
+            // use lstat to check if there is an existing symlink
+            // throws if nothing is there, but returns file stats even for invalid links
+            // we can't rely on fs.exists, since invalid symlinks return false
+            if (FS.lstatSync(this._target)) {
+                FSExtra.removeSync(this._target);
+            }
+        } catch(e) {};
     }
 
     upgrade(packageName) {
@@ -61,18 +66,13 @@ class NPM {
     link(folder) {
         this.remove();
 
-        //Make sure parent dir is there
-        FSExtra.mkdirpSync(Path.dirname(this._target));
         const packageFile = Path.join(folder, 'package.json');
         if (!FS.existsSync(packageFile)) {
             throw new Error(`NPM module not found in folder: ${folder}`);
         }
 
-        spawnSync(`ln -s ${folder} ${this._target}`, {
-            stdio: 'inherit',
-            shell: true
-        });
-
+        FSExtra.mkdirpSync(Path.dirname(this._target));
+        FSExtra.createSymlinkSync(folder, this._target);
     }
 }
 
