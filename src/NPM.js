@@ -1,10 +1,9 @@
-const {spawnSync} = require('child_process');
+const { spawnSync } = require('child_process');
 const Path = require('path');
 const FS = require('fs');
 const FSExtra = require('fs-extra');
 const OS = require('os');
 class NPM {
-
     /**
      * Where the package should be located
      * @param target
@@ -21,10 +20,11 @@ class NPM {
 
         //Make sure parent dir is there
         FSExtra.mkdirpSync(Path.dirname(this._target));
+        FSExtra.mkdirpSync(tmpFolder);
 
         //Get rid of any npm environment variables - will confuse the process.
         const filteredEnv = {};
-        Object.entries(process.env).forEach(([key,value]) => {
+        Object.entries(process.env).forEach(([key, value]) => {
             if (key.toLowerCase().startsWith('npm_')) {
                 return;
             }
@@ -33,18 +33,32 @@ class NPM {
         });
 
         //Install using npm
-        spawnSync(`npm i ${packageName} --prefix ${tmpFolder.replace(/@/g,'\\@')}`, {
+        const escapedPath = tmpFolder.replace(/@/g, '\\@');
+        spawnSync(`npm pack --pack-destination ${escapedPath} ${packageName}`, {
             stdio: 'inherit',
             shell: true,
-            env: filteredEnv
+            env: filteredEnv,
+        });
+
+        spawnSync(
+            `tar -xzf ${escapedPath}/${packageName.replace(/@/g, '').replace('/', '-')}-*.tgz -C ${escapedPath}`,
+            {
+                stdio: 'inherit',
+                shell: true,
+            }
+        );
+
+        spawnSync(`npm i --omit=dev`, {
+            stdio: 'inherit',
+            shell: true,
+            cwd: tmpFolder + '/package',
+            env: filteredEnv,
         });
 
         //Move into place
-        FSExtra.moveSync(tmpFolder + '/node_modules/' + packageName, this._target);
-        FSExtra.moveSync(tmpFolder + '/node_modules', this._target + '/node_modules');
+        FSExtra.moveSync(tmpFolder + '/package', this._target, { overwrite: true });
         //Clean up
         FSExtra.removeSync(tmpFolder);
-
     }
 
     remove() {
@@ -55,7 +69,7 @@ class NPM {
             if (FS.lstatSync(this._target)) {
                 FSExtra.removeSync(this._target);
             }
-        } catch(e) {};
+        } catch (e) {}
     }
 
     upgrade(packageName) {
