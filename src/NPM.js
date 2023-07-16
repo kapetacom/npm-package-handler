@@ -3,6 +3,7 @@ const Path = require('path');
 const FS = require('fs');
 const FSExtra = require('fs-extra');
 const OS = require('os');
+const tar = require('tar');
 class NPM {
     /**
      * Where the package should be located
@@ -12,7 +13,7 @@ class NPM {
         this._target = target;
     }
 
-    install(packageName) {
+    async install(packageName) {
         const tmpFolder = OS.tmpdir() + '/npm-installer/' + packageName;
         if (FS.existsSync(tmpFolder)) {
             FSExtra.removeSync(tmpFolder);
@@ -40,23 +41,30 @@ class NPM {
             env: filteredEnv,
         });
 
-        spawnSync(
-            `tar -xzf ${escapedPath}/${packageName.replace(/@/g, '').replace('/', '-')}-*.tgz -C ${escapedPath}`,
-            {
-                stdio: 'inherit',
-                shell: true,
-            }
-        );
+        const tarFiles = FSExtra.readdirSync(tmpFolder).filter(file => /.tgz$/.test(file));
+
+        if (tarFiles.length !== 1) {
+            throw new Error('Invalid kapeta asset');
+        }
+
+        const absolutePath = Path.join(tmpFolder, tarFiles[0]);
+
+        console.log('Extracting %s to %s', absolutePath, this._target);
+        FSExtra.mkdirpSync(this._target);
+
+        await tar.extract({
+            file: absolutePath,
+            cwd: this._target,
+            strip: 1 //Needed since we've got a random root directory we want to ignore
+        });
 
         spawnSync(`npm i --omit=dev`, {
             stdio: 'inherit',
             shell: true,
-            cwd: tmpFolder + '/package',
+            cwd: this._target,
             env: filteredEnv,
         });
 
-        //Move into place
-        FSExtra.moveSync(tmpFolder + '/package', this._target, { overwrite: true });
         //Clean up
         FSExtra.removeSync(tmpFolder);
     }
