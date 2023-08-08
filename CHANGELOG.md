@@ -1,3 +1,10 @@
+## [0.0.19](https://github.com/kapetacom/npm-package-handler/compare/v0.0.18...v0.0.19) (2023-08-08)
+
+
+### Bug Fixes
+
+* Also remove non-links if they're in the way ([afd737e](https://github.com/kapetacom/npm-package-handler/commit/afd737e74e311010aaf45d60c965cfd8332bd408))
+
 ## [0.0.18](https://github.com/kapetacom/npm-package-handler/compare/v0.0.17...v0.0.18) (2023-07-16)
 
 
