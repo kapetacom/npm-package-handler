@@ -81,9 +81,9 @@ class NPM {
         } catch (e) {}
     }
 
-    upgrade(packageName) {
+    async upgrade(packageName) {
         this.remove();
-        this.install(packageName);
+        return await this.install(packageName);
     }
 
     link(folder) {
