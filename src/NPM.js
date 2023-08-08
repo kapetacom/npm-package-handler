@@ -74,7 +74,8 @@ class NPM {
             // use lstat to check if there is an existing symlink
             // throws if nothing is there, but returns file stats even for invalid links
             // we can't rely on fs.exists, since invalid symlinks return false
-            if (FS.lstatSync(this._target)) {
+            if (FS.lstatSync(this._target) ||
+                FS.existsSync(this._target)) {
                 FSExtra.removeSync(this._target);
             }
         } catch (e) {}
