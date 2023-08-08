@@ -1,3 +1,10 @@
+## [0.0.20](https://github.com/kapetacom/npm-package-handler/compare/v0.0.19...v0.0.20) (2023-08-08)
+
+
+### Bug Fixes
+
+* Use kapeta spawn function to handle cross platform ([790602f](https://github.com/kapetacom/npm-package-handler/commit/790602f9f985065fe500584c1851abdb13fab47e))
+
 ## [0.0.19](https://github.com/kapetacom/npm-package-handler/compare/v0.0.18...v0.0.19) (2023-08-08)
 
 
