@@ -1,3 +1,10 @@
+## [0.0.21](https://github.com/kapetacom/npm-package-handler/compare/v0.0.20...v0.0.21) (2023-08-08)
+
+
+### Bug Fixes
+
+* add missing await to install when upgrading ([a6efe98](https://github.com/kapetacom/npm-package-handler/commit/a6efe986f11640787535cb1cb59dc371926f0d8c))
+
 ## [0.0.20](https://github.com/kapetacom/npm-package-handler/compare/v0.0.19...v0.0.20) (2023-08-08)
 
 
