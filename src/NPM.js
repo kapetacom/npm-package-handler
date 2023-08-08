@@ -1,4 +1,4 @@
-const { spawnSync } = require('child_process');
+const { spawn } = require('@kapeta/nodejs-process');
 const Path = require('path');
 const FS = require('fs');
 const FSExtra = require('fs-extra');
@@ -35,11 +35,11 @@ class NPM {
 
         //Install using npm
         const escapedPath = tmpFolder.replace(/@/g, '\\@');
-        spawnSync(`npm pack --pack-destination ${escapedPath} ${packageName}`, {
+        await spawn(`npm pack --pack-destination ${escapedPath} ${packageName}`, [], {
             stdio: 'inherit',
             shell: true,
             env: filteredEnv,
-        });
+        }).wait();
 
         const tarFiles = FSExtra.readdirSync(tmpFolder).filter(file => /.tgz$/.test(file));
 
@@ -58,12 +58,12 @@ class NPM {
             strip: 1 //Needed since we've got a random root directory we want to ignore
         });
 
-        spawnSync(`npm i --omit=dev`, {
+        await spawn(`npm i --omit=dev`, [], {
             stdio: 'inherit',
             shell: true,
             cwd: this._target,
             env: filteredEnv,
-        });
+        }).wait();
 
         //Clean up
         FSExtra.removeSync(tmpFolder);
