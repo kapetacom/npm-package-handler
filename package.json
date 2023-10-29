@@ -4,6 +4,11 @@
     "description": "Utility for installing, upgrading and removing npm packages outside of npm projects",
     "main": "index.js",
     "license": "MIT",
+    "author": {
+        "email": "engineering@kapeta.com",
+        "name": "Kapeta",
+        "url": "https://kapeta.com"
+    },
     "private": false,
     "publishConfig": {
         "access": "public"

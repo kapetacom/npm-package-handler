@@ -1,3 +1,8 @@
+/**
+ * Copyright 2023 Kapeta Inc.
+ * SPDX-License-Identifier: MIT
+ */
+
 const { spawn } = require('@kapeta/nodejs-process');
 const Path = require('path');
 const FS = require('fs');
